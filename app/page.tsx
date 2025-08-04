@@ -51,6 +51,16 @@ export default function Home() {
       const res = await getData(selectedCity);
       setPollution(res);
       setActiveCity(selectedCity); // Update active city only when button is clicked
+
+      setTimeout(() => {
+        const resultsElement = document.getElementById('results');
+        if (resultsElement) {
+          resultsElement.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }, 300); // Small delay to ensure the results have rendered
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -99,7 +109,7 @@ export default function Home() {
                 <button 
                   onClick={handleClick}
                   disabled={loading}
-                  className="px-4 py-2 sm:px-8 sm:py-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-2xl hover:scale-105 active:scale-95"
+                  className="px-4 py-2 sm:px-7 sm:py-4 cursor-pointer bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-2xl active:scale-95"
                 >
                   {loading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
@@ -116,7 +126,7 @@ export default function Home() {
 
           {/* Results */}
           {pollution && (
-            <div className="max-w-6xl mx-auto animate-in fade-in duration-500">
+            <div id='results' className="max-w-6xl mx-auto animate-in fade-in duration-500">
               {/* Main stats */}
               <div className="grid lg:grid-cols-2 auto-cols-fr gap-8">
                 <CigaretteCounter count={cigaretteCount} city={activeCity} pollution={pollution} />
