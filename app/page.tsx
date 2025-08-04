@@ -160,8 +160,38 @@ export default function Home() {
         <div className="container mx-auto px-4 pb-12">
           <Header />
 
-          {/* Enhanced city selection */}
           <div className="max-w-md mx-auto mb-16">
+            {/* Use Current Location Button */}
+            <div className="text-center">
+              <button 
+                onClick={handleLocationClick}
+                disabled={locationLoading}
+                className="group w-full flex items-center cursor-pointer gap-3 px-6 py-4 bg-gradient-to-r from-red-500 to-orange-600 hover:from-orange-700 hover:to-red-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 border border-white/10"
+              >
+                {locationLoading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                ) : (
+                  <Navigation className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                )}
+                <div className="text-left flex-1">
+                  <div className="text-base font-medium">
+                    {locationLoading ? 'Detecting Your Location...' : 'Use My Current Location'}
+                  </div>
+                  <div className="text-xs text-white/80 font-normal">
+                    {locationLoading ? 'Please wait while we get your coordinates' : 'Get AQI data for where you\`re right now'}
+                  </div>
+                </div>
+              </button>
+            </div>
+            
+            {/* OR Divider */}
+            <div className="flex items-center justify-center mt-6 mb-6">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              <span className="px-4 text-white/60 font-medium text-sm">OR</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+            </div>
+
+            {/* Enhanced city selection */}
             <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-2 shadow-2xl">
               <div className="flex gap-3">
                 {/* Custom styled select */}
@@ -196,36 +226,6 @@ export default function Home() {
                   </span>
                 </button>
               </div>
-            </div>
-            
-            {/* OR Divider */}
-            <div className="flex items-center justify-center mt-6 mb-6">
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-              <span className="px-4 text-white/60 font-medium text-sm">OR</span>
-              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-            </div>
-
-            {/* Use Current Location Button */}
-            <div className="text-center">
-              <button 
-                onClick={handleLocationClick}
-                disabled={locationLoading}
-                className="group w-full flex items-center cursor-pointer gap-3 px-6 py-4 bg-gradient-to-r from-red-500 to-orange-600 hover:from-orange-700 hover:to-red-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 border border-white/10"
-              >
-                {locationLoading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                ) : (
-                  <Navigation className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                )}
-                <div className="text-left flex-1">
-                  <div className="text-base font-medium">
-                    {locationLoading ? 'Detecting Your Location...' : 'Use My Current Location'}
-                  </div>
-                  <div className="text-xs text-white/80 font-normal">
-                    {locationLoading ? 'Please wait while we get your coordinates' : 'Get air quality data for where you are right now'}
-                  </div>
-                </div>
-              </button>
             </div>
           </div>
 
