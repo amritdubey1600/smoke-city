@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Wind } from "lucide-react";
+import { MapPin, Wind, Navigation } from "lucide-react";
 import { CigaretteCounter } from "@/components/cigaretteCounter";
 import { AQIDisplay } from "@/components/aqiDisplay";
 import { pm25ToCigarettes } from "@/lib/converter";
@@ -25,11 +25,20 @@ async function getData(city: string): Promise<pollutionType>{
   return pollution;
 }
 
+async function getDataByCoords(lat: number, lon: number): Promise<pollutionType> {
+  const pollution = await fetch(`api/pollution?lat=${lat}&lon=${lon}`)
+    .then(res => res.json())
+    .catch(error => console.log(error));
+
+  return pollution;
+}
+
 export default function Home() {
   const [selectedCity, setSelectedCity] = useState<string>("Dubai");
   const [activeCity, setActiveCity] = useState<string>("Dubai"); // City used for API calls
   const [pollution, setPollution] = useState<pollutionType | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [locationLoading, setLocationLoading] = useState<boolean>(false);
 
   const cities = [
     { value: "Kolkata", label: "Kolkata, India", flag: "🇮🇳" },
@@ -66,6 +75,72 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLocationClick = async () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by this browser.');
+      return;
+    }
+
+    setLocationLoading(true);
+    
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const pollution = await getDataByCoords(latitude, longitude);
+          
+          const latDir = latitude >= 0 ? 'N' : 'S';
+          const lonDir = longitude >= 0 ? 'E' : 'W';
+          
+          setPollution(pollution);
+          setActiveCity(`your location: ${Math.abs(latitude).toFixed(2)}° ${latDir}, ${Math.abs(longitude).toFixed(2)}° ${lonDir}`);
+
+          setTimeout(() => {
+            const resultsElement = document.getElementById('results');
+            if (resultsElement) {
+              resultsElement.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          }, 300);
+        } catch (error) {
+          console.error("Error fetching location data:", error);
+          alert('Failed to get air quality data for your location.');
+        } finally {
+          setLocationLoading(false);
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        let errorMessage = 'Unable to get your location. ';
+        
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage += 'Please allow location access and try again.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage += 'Location information is unavailable.';
+            break;
+          case error.TIMEOUT:
+            errorMessage += 'Location request timed out.';
+            break;
+          default:
+            errorMessage += 'An unknown error occurred.';
+            break;
+        }
+        
+        alert(errorMessage);
+        setLocationLoading(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000 // 5 minutes
+      }
+    );
   };
 
   const cigaretteCount = pollution ? pm25ToCigarettes(pollution.pm2_5) : 0;
@@ -109,7 +184,7 @@ export default function Home() {
                 <button 
                   onClick={handleClick}
                   disabled={loading}
-                  className="px-4 py-2 sm:px-7 sm:py-4 cursor-pointer bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-2xl active:scale-95"
+                  className="px-4 py-2 sm:px-7 sm:py-4 cursor-pointer bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-2xl active:scale-95"
                 >
                   {loading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
@@ -121,6 +196,36 @@ export default function Home() {
                   </span>
                 </button>
               </div>
+            </div>
+            
+            {/* OR Divider */}
+            <div className="flex items-center justify-center mt-6 mb-6">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              <span className="px-4 text-white/60 font-medium text-sm">OR</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+            </div>
+
+            {/* Use Current Location Button */}
+            <div className="text-center">
+              <button 
+                onClick={handleLocationClick}
+                disabled={locationLoading}
+                className="group w-full flex items-center cursor-pointer gap-3 px-6 py-4 bg-gradient-to-r from-red-500 to-orange-600 hover:from-orange-700 hover:to-red-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 border border-white/10"
+              >
+                {locationLoading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                ) : (
+                  <Navigation className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                )}
+                <div className="text-left flex-1">
+                  <div className="text-base font-medium">
+                    {locationLoading ? 'Detecting Your Location...' : 'Use My Current Location'}
+                  </div>
+                  <div className="text-xs text-white/80 font-normal">
+                    {locationLoading ? 'Please wait while we get your coordinates' : 'Get air quality data for where you are right now'}
+                  </div>
+                </div>
+              </button>
             </div>
           </div>
 
