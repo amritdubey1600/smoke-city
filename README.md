@@ -1,4 +1,4 @@
-#Smoke City
+# Smoke City
 
 [Live Link](https://smoke-city.vercel.app/)
 
