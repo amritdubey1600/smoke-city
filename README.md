@@ -1,6 +1,6 @@
 # Smoke City
 
-[Live Link](https://smoke-city.vercel.app/)
+[Live App Link](https://smoke-city.vercel.app/)
 
 ## Getting Started
 
