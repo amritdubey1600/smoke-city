@@ -193,28 +193,34 @@ export default function Home() {
 
             {/* Enhanced city selection */}
             <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-2 shadow-2xl">
-              <div className="flex gap-3">
-                {/* Custom styled select */}
-                <div className="flex-1 relative">
-                  <select 
-                    value={selectedCity} 
-                    onChange={(e) => setSelectedCity(e.target.value)}
-                    className="w-full p-3 sm:p-4 bg-transparent text-white text-base sm:text-lg font-medium focus:outline-none appearance-none sm:appearance-none cursor-pointer"
-                  >
-                    {cities.map((city) => (
-                      <option key={city.value} value={city.value} className="text-sm sm:text-base bg-slate-800 text-white">
-                        {city.flag} {city.label}
-                      </option>
-                    ))}
-                  </select>
-                  <MapPin className="hidden sm:block absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-white/60 pointer-events-none" />
+              <div className="flex items-center gap-3">
+                {/* Custom styled select with Label */}
+                <div className="flex-1">
+                  <label htmlFor="city-select" className="px-3 pt-1 text-xs font-medium text-white/60 tracking-wide uppercase">
+                    Select City
+                  </label>
+                  <div className="relative">
+                    <select 
+                      id="city-select"
+                      value={selectedCity} 
+                      onChange={(e) => setSelectedCity(e.target.value)}
+                      className="w-full pl-3 pr-10 py-2 sm:pl-4 sm:py-3 bg-transparent text-white text-base sm:text-lg font-medium focus:outline-none appearance-none cursor-pointer"
+                    >
+                      {cities.map((city) => (
+                        <option key={city.value} value={city.value} className="text-sm sm:text-base bg-slate-800 text-white">
+                          {city.flag} {city.label}
+                        </option>
+                      ))}
+                    </select>
+                    <MapPin className="hidden sm:block absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-white/60 pointer-events-none" />
+                  </div>
                 </div>
                 
                 {/* Enhanced button */}
                 <button 
                   onClick={handleClick}
                   disabled={loading}
-                  className="px-4 py-2 sm:px-7 sm:py-4 cursor-pointer bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-2xl active:scale-95"
+                  className="px-7 py-4 cursor-pointer bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-2xl active:scale-95"
                 >
                   {loading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
