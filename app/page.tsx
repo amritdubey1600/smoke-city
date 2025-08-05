@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Wind, Navigation } from "lucide-react";
+import { MapPin, Wind, Navigation, ChevronDown } from "lucide-react";
 import { CigaretteCounter } from "@/components/cigaretteCounter";
 import { AQIDisplay } from "@/components/aqiDisplay";
 import { pm25ToCigarettes } from "@/lib/converter";
@@ -160,75 +160,70 @@ export default function Home() {
         <div className="container mx-auto px-4 pb-12">
           <Header />
 
-          <div className="max-w-md mx-auto mb-16">
+          <div className="max-w-md mx-auto mb-16 space-y-6">
             {/* Use Current Location Button */}
-            <div className="text-center">
-              <button 
-                onClick={handleLocationClick}
-                disabled={locationLoading}
-                className="group w-full flex items-center cursor-pointer gap-3 px-6 py-4 bg-gradient-to-r from-red-500 to-orange-600 hover:from-orange-700 hover:to-red-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 border border-white/10"
-              >
-                {locationLoading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                ) : (
-                  <Navigation className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                )}
-                <div className="text-left flex-1">
-                  <div className="text-base font-medium">
-                    {locationLoading ? 'Detecting Your Location...' : 'Use My Current Location'}
-                  </div>
-                  <div className="text-xs text-white/80 font-normal">
-                    {locationLoading ? 'Please wait while we get your coordinates' : 'Get AQI data for where you\`re right now'}
-                  </div>
+            <button 
+              onClick={handleLocationClick}
+              disabled={locationLoading}
+              className="group w-full flex items-center cursor-pointer gap-3 px-6 py-4 bg-gradient-to-r from-red-500 to-orange-600 hover:from-orange-700 hover:to-red-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 border border-white/10"
+            >
+              {locationLoading ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+              ) : (
+                <Navigation className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+              )}
+              <div className="text-left flex-1">
+                <div className="text-base font-medium">
+                  {locationLoading ? 'Detecting Your Location...' : 'Use My Current Location'}
                 </div>
-              </button>
-            </div>
-            
+                <div className="text-xs text-white/80 font-normal">
+                  {locationLoading ? 'Please wait while we get your coordinates' : 'Get AQI data for where you\'re right now'}
+                </div>
+              </div>
+            </button>
+
             {/* OR Divider */}
-            <div className="flex items-center justify-center mt-6 mb-6">
+            <div className="flex items-center justify-center">
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
               <span className="px-4 text-white/60 font-medium text-sm">OR</span>
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
             </div>
 
-            {/* Enhanced city selection */}
-            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-2 shadow-2xl">
-              <div className="flex items-center gap-3">
-                {/* Custom styled select with Label */}
-                <div className="flex-1">
-                  <label htmlFor="city-select" className="px-3 pt-1 text-xs font-medium text-white/60 tracking-wide uppercase">
-                    Select City
-                  </label>
-                  <div className="relative">
-                    <select 
-                      id="city-select"
-                      value={selectedCity} 
-                      onChange={(e) => setSelectedCity(e.target.value)}
-                      className="w-full pl-3 pr-10 py-2 sm:pl-4 sm:py-3 bg-transparent text-white text-base sm:text-lg font-medium focus:outline-none appearance-none cursor-pointer"
-                    >
-                      {cities.map((city) => (
-                        <option key={city.value} value={city.value} className="text-sm sm:text-base bg-slate-800 text-white">
-                          {city.flag} {city.label}
-                        </option>
-                      ))}
-                    </select>
-                    <MapPin className="hidden sm:block absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-white/60 pointer-events-none" />
-                  </div>
+            {/* Clean City Selection */}
+            <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl">
+              <div className="flex items-center gap-3 mb-4">
+                <MapPin className="w-5 h-5 text-orange-400" />
+                <span className="text-white font-medium">Select City</span>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="relative">
+                  <select 
+                    value={selectedCity} 
+                    onChange={(e) => setSelectedCity(e.target.value)}
+                    className="w-full p-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 appearance-none cursor-pointer transition-all duration-300"
+                  >
+                    {cities.map((city) => (
+                      <option key={city.value} value={city.value} className="bg-slate-800 text-white py-2">
+                        {city.flag} {city.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60 pointer-events-none" />
                 </div>
                 
-                {/* Enhanced button */}
                 <button 
                   onClick={handleClick}
                   disabled={loading}
-                  className="px-7 py-4 cursor-pointer bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-2xl active:scale-95"
+                  className="w-full px-6 py-4 cursor-pointer bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-2xl active:scale-95"
                 >
                   {loading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                   ) : (
                     <Wind className="w-5 h-5" />
                   )}
-                  <span className="whitespace-nowrap">
-                    {loading ? 'Checking...' : 'Check Air'}
+                  <span>
+                    {loading ? 'Checking Air Quality...' : 'Check Air Quality'}
                   </span>
                 </button>
               </div>
