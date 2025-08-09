@@ -140,7 +140,9 @@ export const CigaretteCounter = ({ count, maxCount = 20, city, pollution }: { co
           )}
           
           <div className="flex justify-between text-sm text-white/60">
-            <span>Daily exposure</span>
+            <span title={`Percentage based on max ${maxCount} cigarettes`}>
+              Pollution vs. Daily Limit
+            </span>
             <span>{animatedPercentage.toFixed(1)}%</span>
           </div>
           <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">

@@ -156,7 +156,11 @@ export const AQIDisplay = ({ pm2_5 }: Props) => {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}>
             <div className="flex justify-between text-sm text-white/60">
-              <span>EPA AQI (based on PM2.5)</span>
+              <span
+                title="Percentage based on EPA Scale(0-500)"
+              >
+                EPA AQI (based on PM2.5)
+              </span>
               <span>{Math.round(animatedPercentage)}%</span>
             </div>
             <div className="h-2 bg-white/10 rounded-full overflow-hidden">
